@@ -1,0 +1,23 @@
+{% include "clinic/navbar.html" %}
+
+<h2 style="padding:20px">Accounting</h2>
+
+<table border="1" cellpadding="10" style="width:100%">
+<tr>
+    <th>المريض</th>
+    <th>عدد الجلسات</th>
+    <th>الإجمالي</th>
+    <th>المدفوع</th>
+    <th>المتبقي</th>
+</tr>
+
+{% for plan in plans %}
+<tr>
+    <td>{{ plan.patient.name }}</td>
+    <td>{{ plan.total_sessions }}</td>
+    <td>{{ plan.total_price }}</td>
+    <td>{{ plan.paid_amount }}</td>
+    <td>{{ plan.remaining_amount }}</td>
+</tr>
+{% endfor %}
+</table>

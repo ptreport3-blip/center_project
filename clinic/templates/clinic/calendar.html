@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trust Steps Center – Appointments</title>
+
+    <!-- FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            padding: 15px 20px;
+            font-size: 22px;
+            font-weight: bold;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #calendar {
+            padding: 10px;
+        }
+
+        /* تنسيق المواعيد */
+        .fc-event-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+        }
+
+        .fc-event-time {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .fc-timegrid-event {
+            min-height: 22px !important;
+        }
+    </style>
+</head>
+<body>
+
+{% include "clinic/navbar.html" %}
+
+<div class="container">
+    <div class="card">
+        <h2>Trust Steps Center</h2>
+        <a href="/calendar/" class="btn">📅 Calendar</a>
+<div class="header">
+Trust Steps Center – Appointments
+</div>
+
+<div id="calendar"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const STORAGE_KEY = "appointments_data";
+
+    function loadEvents() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    }
+
+    function saveEvents(events) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    }
+
+    let storedEvents = loadEvents();
+
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        firstDay: 6,   // السبت هو أول يوم في الأسبوع
+
+        slotDuration: '00:15:00',
+        slotMinTime: '08:00:00',
+        slotMaxTime: '21:00:00',
+
+        allDaySlot: false,
+        expandRows: true,
+        nowIndicator: true,
+
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+
+        events: storedEvents,
+
+        /* إضافة موعد */
+        dateClick: function (info) {
+            let name = prompt("Enter appointment name:");
+            if (!name) return;
+
+            let start = info.date;
+            let end = new Date(start.getTime() + 15 * 60000);
+
+            let newEvent = {
+                id: Date.now().toString(),
+                title: name,
+                start: start,
+                end: end
+            };
+
+            calendar.addEvent(newEvent);
+
+            storedEvents.push(newEvent);
+            saveEvents(storedEvents);
+        },
+
+        /* حذف موعد */
+        eventClick: function (info) {
+            if (!confirm("هل أنت متأكد من حذف الموعد؟")) return;
+
+            info.event.remove();
+
+            storedEvents = storedEvents.filter(e => e.id !== info.event.id);
+            saveEvents(storedEvents);
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
+</body>
+</html>

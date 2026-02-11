@@ -1,0 +1,53 @@
+<div class="navbar">
+    <div class="left">
+        <a href="/">🏠 Dashboard</a>
+        <a href="/calendar/">📅 Calendar</a>
+
+        {% if user.is_superuser %}
+            <a href="/admin/">⚙️ Admin</a>
+        {% endif %}
+    </div>
+
+    <div class="right">
+        <span class="user">👤 {{ user.username }}</span>
+        <a href="/admin/logout/" class="logout">Logout</a>
+    </div>
+</div>
+
+<style>
+.navbar {
+    background: #1976d2;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.user {
+    color: #e3f2fd;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.logout {
+    background: #d32f2f;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+
+.logout:hover {
+    background: #b71c1c;
+    text-decoration: none;
+}
+</style>
